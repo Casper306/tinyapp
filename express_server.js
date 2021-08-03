@@ -3,9 +3,9 @@ const app = express();
 const PORT = 8080;
 
 //This allows use the body parser
-// const bodyParser = require("body-parser");
-// app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.urlencoded({extended: true}));
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(express.urlencoded({extended: true}));
 
 //This allows use ejs
 app.set('view engine', 'ejs');
