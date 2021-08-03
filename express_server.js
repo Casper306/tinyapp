@@ -29,19 +29,38 @@ app.get('/', (reg, res) => {
   res.send('Hello!');
 });
 
+app.get('/hello', (reg, res) => {
+  res.send('<html><body>Hello <b>World</b></body></html>\n');
+});
+
 app.get('/urls.json', (reg, res) => {
   res.json(urlDatabase);
 });
 
+//take DB data and create/render index '/urls' page
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
 
+//create/render '/urls/new' page
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+// takes short URL as a params to find out long URL
+app.get("/urls/:shortURL", (req, res) => {
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  res.render("urls_show", templateVars);
+});
+
+//redirect short URL
+app.get("/u/:shortURL", (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
+});
+
+//generate 6 random chars and add to DB
 app.post("/urls", (req, res) => {
   //console.log(req.body);  // Log the POST request body to the console
   // res.send("Ok");
@@ -50,20 +69,7 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
-app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
-  res.render("urls_show", templateVars);
-});
-
-app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
-});
-
-app.get('/hello', (reg, res) => {
-  res.send('<html><body>Hello <b>World</b></body></html>\n');
-});
-
+// delete URL 
 app.post('/urls/:shortURL/delete', (req, res) => {
   const shortURL = req.params.shortURL;
   console.log('deleting', shortURL);
@@ -72,6 +78,16 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   res.redirect('/urls');
 });
 
+//update(edit) URL 
+app.post("/urls/:shortURL", (req, res) => {
+  //extract shorturl from params
+    const oldURL = req.params.shortURL;
+    //extract new url value from the form => req.body
+    const currentURL = req.body.currentURL;
+    //update the quote content for that id
+    urlDatabase[oldURL] = currentURL;
+    res.redirect('/urls');
+  });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
