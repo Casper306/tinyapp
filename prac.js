@@ -9,11 +9,13 @@
 
 // console.log(generateRandomString());
 
-function generateRandomString(length, chars) {
+function generateRandomString() {
+  let character = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let result = '';
-  for (let i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+  for (let i = 0; i < 6 ; i++) 
+  result += character[Math.floor(Math.random() * character.length)];
   return result;
 }
-const randomString = generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+const randomString = generateRandomString();
 
 console.log(randomString);
